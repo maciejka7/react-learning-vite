@@ -10,10 +10,7 @@ function App() {
 
   return (
     <div className="App">
-      <Routes>
-        <Route path="/" element={<App />} />
-        <Route path="projects/quiz-app" element={<QuizApp />} />
-      </Routes>
+   
       <div>
         <a href="https://vitejs.dev" target="_blank">
           <img src="/vite.svg" className="logo" alt="Vite logo" />
