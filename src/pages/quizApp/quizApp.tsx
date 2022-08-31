@@ -1,9 +1,12 @@
 import React from 'react'
+import { QuizApp } from '../../feature/quizApp'
 
 type Props = {}
 
-export const QuizApp = (props: Props) => {
+export const QuizAppPage = (props: Props) => {
   return (
-    <div>quizApp</div>
+    <div>
+      <QuizApp />
+    </div>
   )
 }
