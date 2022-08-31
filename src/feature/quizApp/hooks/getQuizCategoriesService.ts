@@ -2,7 +2,7 @@ import { useQuery } from "@tanstack/react-query"
 
 const URL = 'https://opentdb.com/'
 
-interface Category {
+export interface Category {
     id: number,
     name: string,
 }
