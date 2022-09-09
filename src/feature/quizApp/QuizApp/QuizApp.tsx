@@ -1,6 +1,6 @@
 import React, { ChangeEvent, FormEvent } from 'react'
 import { unstable_renderSubtreeIntoContainer } from 'react-dom'
-import { Category, useGetQuizCategoriesService } from '../hooks/getQuizCategoriesService'
+import { Category, useQuizCategories } from '../hooks/useQuizCategories'
 
 type Props = {}
 
@@ -8,7 +8,7 @@ type SelectedCategory = {} | Category
 
 export const QuizApp = (props: Props) => {
 
-  const { categories, error, isError, isLoading } = useGetQuizCategoriesService()
+  const { categories, error, isError, isLoading } = useQuizCategories()
 
   const [selectedCategory, setSelectedCategory] = React.useState<SelectedCategory>({})
 

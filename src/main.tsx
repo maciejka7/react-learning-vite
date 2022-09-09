@@ -5,6 +5,16 @@ import { QueryClient, QueryClientProvider, useQuery } from '@tanstack/react-quer
 import { RouterProvider } from './RouterProvider'
 import { Routes } from './Routes'
 
+export const queryClientConfig = {
+  logger: {
+    log: console.log,
+    warn: console.warn,
+    // ✅ no more errors on the console for tests
+    // error: process.env.NODE_ENV === 'test' ? () => {} : console.error,
+    error: null
+  },
+}
+
 const queryClient = new QueryClient()
 
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
