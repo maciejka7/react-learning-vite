@@ -1,55 +1,57 @@
 import { renderHook } from "@testing-library/react-hooks";
-import { ENDPOINTS, URL, useQuizCategories } from "./useQuizCategories";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { ENDPOINTS, quizUrl, URL, useQuizCategories } from "./useQuizCategories";
+import { rest } from 'msw'
+import { setupServer } from 'msw/node'
+import {
+  QueryClient,
+  QueryClientProvider,
+} from "@tanstack/react-query";
 import { queryClientConfig } from "../../../main";
+import { logRoles } from "@testing-library/react";
 
 const wrapper = ({ children }: { children: React.ReactNode }) => (
-  <QueryClientProvider
-    client={
-      new QueryClient({
-        defaultOptions: {
-          queries: {
-            // ✅ turns retries off
-            retry: false,
-          },
-        },
-      })
-    }
-  >
+  <QueryClientProvider client={new QueryClient({
+    defaultOptions: {
+      queries: {
+        // ✅ turns retries off
+        retry: 3,
+      },
+    },
+    logger: {
+      log: console.log,
+      warn: console.warn,
+      // ✅ no more errors on the console for tests
+      error: () => {}
+    },
+  })}>
     {children}
   </QueryClientProvider>
 );
 
-const mockApiResponse = [{ id: 1, name: "test" }];
+const mockApiResponse = [{id: 1, name: 'test'}]
 
 export const restHandlers = [
-  rest.get("https://rest-endpoint.example/path/to/posts", (req, res, ctx) => {
-    return res(ctx.status(200), ctx.json(posts));
+  rest.get(quizUrl, (req, res, ctx) => {
+    console.log("API CALL")
+    return res(ctx.status(200), ctx.json(mockApiResponse))
   }),
-];
+]
 
-test("should increment counter", async () => {
-  it("test 1", async () => {
-    const { result, waitFor } = renderHook(() => useQuizCategories(), {
-      wrapper,
-    });
+const server = setupServer(...restHandlers)
 
-    console.log(result.current.categories);
-    await waitFor(() => {
-      return result.current.isLoading;
-    });
+// Start server before all tests
+beforeAll(() => server.listen({ onUnhandledRequest: 'error' }))
+
+//  Close server after all tests
+afterAll(() => server.close())
+
+// Reset handlers after each test `important for test isolation`
+afterEach(() => server.resetHandlers())
+
+describe('useQuizCategories tests', async() => {
+
+  test("hook return proper data", async () => {
+    
   });
-
-  it("test", async () => {
-    const { result, waitFor } = renderHook(() => useQuizCategories(), {
-      wrapper,
-    });
-
-    await waitFor(() => {
-      console.log(result.all);
-      expect(result.current.isSuccess).toBe(true);
-    });
-  });
-
-  //   expect(result.current.count).toBe(1)
-});
+   
+})
